@@ -34,6 +34,11 @@ class _HomePageTodoState extends State<HomePageTodo> {
   Widget _item(Todo element, int posicion) {
     return Dismissible(
         key: UniqueKey(),
+        onDismissed: (direction) {
+          setState(() {
+            todos.removeAt(posicion);
+          });
+        },
         child: Card(
           color: element.completed == 1 ? Colors.blueGrey : Colors.yellow[200],
           child: InkWell(
@@ -100,26 +105,30 @@ class _NewTodoDialogState extends State<NewTodoDialog> {
         'New todo',
         style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
       ),
-      content: Column(children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            decoration: InputDecoration(
-              labelText: 'Title',
+      content: Container(
+        height: 200.0,
+        width: 400.0,
+        child: Column(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Title',
+              ),
+              controller: controllerTitle,
             ),
-            controller: controllerTitle,
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            decoration: InputDecoration(
-              labelText: 'Body',
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Body',
+              ),
+              controller: controllerBody,
             ),
-            controller: controllerBody,
-          ),
-        )
-      ]),
+          )
+        ]),
+      ),
       actions: <Widget>[
         FlatButton(
             onPressed: () {
