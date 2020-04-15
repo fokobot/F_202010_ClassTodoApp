@@ -1,5 +1,6 @@
 import 'package:f_202010_todo_class/model/todo.dart';
 import 'package:flutter/material.dart';
+import 'package:f_202010_todo_class/pages/dropdown.dart';
 
 class HomePageTodo extends StatefulWidget {
   @override
@@ -45,13 +46,11 @@ class _HomePageTodoState extends State<HomePageTodo> {
             onTap: () {
               _onTap(context, element, posicion);
             },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: ListTile(
-                  title: Text(element.title),
-                  subtitle: Text(element.body),
-                ),
+            child: Container(
+              child: ListTile(
+                leading: element.type,
+                title: Text(element.title),
+                subtitle: Text(element.body),
               ),
             ),
           ),
@@ -97,6 +96,7 @@ class NewTodoDialog extends StatefulWidget {
 class _NewTodoDialogState extends State<NewTodoDialog> {
   final controllerTitle = new TextEditingController();
   final controllerBody = new TextEditingController();
+  String _dropSelected = "DEFAULT";
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -126,7 +126,12 @@ class _NewTodoDialogState extends State<NewTodoDialog> {
               ),
               controller: controllerBody,
             ),
-          )
+          ),
+          TodoTypeDropdown(
+              selected: _dropSelected,
+              onChangedValue: (value) => setState(() {
+                    _dropSelected = value;
+                  }))
         ]),
       ),
       actions: <Widget>[
@@ -139,10 +144,27 @@ class _NewTodoDialogState extends State<NewTodoDialog> {
                     color: Theme.of(context).primaryColor, fontSize: 20.0))),
         FlatButton(
             onPressed: () {
+              Icon icon;
+              print(_dropSelected);
+              switch (_dropSelected) {
+                case 'DEFAULT':
+                  icon = Icon(Icons.check);
+                  break;
+                case 'CALL':
+                  icon = Icon(Icons.call);
+                  break;
+                case 'HOME_WORK':
+                  icon = Icon(Icons.contacts);
+                  break;
+                default:
+                  icon = Icon(Icons.dialpad);
+                  break;
+              }
               final todo = new Todo(
                   title: controllerTitle.value.text,
                   body: controllerBody.value.text,
-                  completed: 0);
+                  completed: 0,
+                  type: icon);
               controllerBody.clear();
               controllerBody.clear();
               Navigator.of(context).pop(todo);
